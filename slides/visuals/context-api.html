@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Context API vs Prop Drilling</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
+
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: radial-gradient(circle at center, #2c3e50, #000000);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      h1 {
+        font-size: 3rem;
+        background: linear-gradient(90deg, #a8e063, #56ab2f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 60px;
+        text-shadow: 0 0 30px rgba(168, 224, 99, 0.3);
+      }
+
+      .tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        position: relative;
+      }
+
+      .node {
+        width: 160px;
+        height: 70px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s;
+      }
+
+      .target {
+        border-color: #ffd700;
+        color: #ffd700;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      }
+
+      /* Connecting lines */
+      .tree::before {
+        content: '';
+        position: absolute;
+        top: 35px;
+        left: 50%;
+        width: 2px;
+        height: 330px; /* Spans all nodes */
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.05)
+        );
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+
+      .controls {
+        margin-top: 60px;
+        display: flex;
+        gap: 30px;
+      }
+
+      button {
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+        font-family: 'Outfit', sans-serif;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn-drill {
+        background: linear-gradient(135deg, #ff9f43, #ee5253);
+        color: white;
+      }
+      .btn-context {
+        background: linear-gradient(135deg, #54a0ff, #2e86de);
+        color: white;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      }
+      button:active {
+        transform: scale(0.95);
+      }
+
+      /* Particle */
+      .data-packet {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        background: #ffd700;
+        border-radius: 50%;
+        z-index: 10;
+        top: 23px; /* Center of first node vertically */
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+        box-shadow: 0 0 20px #ffd700;
+      }
+
+      /* Teleport Animation */
+      @keyframes teleport {
+        0% {
+          opacity: 1;
+          transform: translateX(-50%) scale(1);
+          box-shadow: 0 0 20px #ffd700;
+        }
+        40% {
+          opacity: 0;
+          transform: translateX(-50%) scale(0.1);
+          box-shadow: 0 0 50px #ffd700;
+        }
+        60% {
+          opacity: 0;
+          top: 353px;
+          transform: translateX(-50%) scale(0.1);
+        } /* Target pos */
+        100% {
+          opacity: 1;
+          top: 353px;
+          transform: translateX(-50%) scale(1);
+          box-shadow: 0 0 20px #ffd700;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Data Delivery</h1>
+
+    <div class="tree">
+      <div class="node" id="n1">Root (App)</div>
+      <div class="node" id="n2">Layout</div>
+      <div class="node" id="n3">Header</div>
+      <div class="node target" id="n4">UserMenu</div>
+
+      <div class="data-packet" id="packet"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-drill" onclick="drill()">
+        Prop Drill (The Hard Way)
+      </button>
+      <button class="btn-context" onclick="useContext()">
+        Use Context (The Portal)
+      </button>
+    </div>
+
+    <script>
+      function wait(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      async function drill() {
+        const p = document.getElementById('packet');
+        p.style.display = 'block';
+        p.style.top = '23px'; // Start at Root
+        p.style.animation = 'none';
+
+        // Step 1: Root -> Layout
+        await p.animate([{ top: '23px' }, { top: '133px' }], {
+          duration: 800,
+          fill: 'forwards',
+          easing: 'ease-in-out',
+        }).finished;
+        await wait(200);
+
+        // Step 2: Layout -> Header
+        await p.animate([{ top: '133px' }, { top: '243px' }], {
+          duration: 800,
+          fill: 'forwards',
+          easing: 'ease-in-out',
+        }).finished;
+        await wait(200);
+
+        // Step 3: Header -> UserMenu
+        await p.animate([{ top: '243px' }, { top: '353px' }], {
+          duration: 800,
+          fill: 'forwards',
+          easing: 'ease-in-out',
+        }).finished;
+      }
+
+      async function useContext() {
+        const p = document.getElementById('packet');
+        p.style.display = 'block';
+        p.style.top = '23px';
+
+        // Teleport!
+        p.style.animation =
+          'teleport 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards'; // Slower, bouncy
+      }
+    </script>
+  </body>
+</html>
