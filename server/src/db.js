@@ -19,6 +19,25 @@ export class Database {
     console.log('[DB] Connected to Postgres.');
   }
 
+  async initialize() {
+    // Auto-create table if it doesn't exist
+    const schema = `
+      CREATE TABLE IF NOT EXISTS generated_pokaimon (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        type VARCHAR(100),
+        powers JSONB,
+        characteristics TEXT,
+        image_url TEXT,
+        doodle_source TEXT,
+        like_count INTEGER NOT NULL DEFAULT 0,
+        action_images JSONB DEFAULT '{}'::jsonb
+      );
+    `;
+    await this.pool.query(schema);
+    console.log('[DB] Schema initialized.');
+  }
+
   async insert(pokemon) {
     const { name, type, powers, characteristics, image_url, doodle_source } = pokemon;
     const result = await this.pool.query(

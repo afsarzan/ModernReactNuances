@@ -18,6 +18,7 @@ let db;
 try {
   db = new Database({ url: process.env.DATABASE_URL });
   await db.connect();
+  await db.initialize();
 } catch (err) {
   console.error('[DB] Startup failed:', err.message);
   process.exit(1);
