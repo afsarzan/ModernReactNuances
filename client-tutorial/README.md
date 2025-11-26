@@ -71,6 +71,49 @@ The app should open at `http://localhost:5173`
 
 ---
 
+## Using Your Gemini API Key
+
+The app uses the Gemini API for AI-powered PokAImon generation. To provide your API key:
+
+### Getting Your API Key
+
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Sign in with your Google account
+3. Create a new API key or copy an existing one
+
+### Using the `useApiKey` Hook
+
+The app includes an `ApiKeyContext` that manages your API key securely in browser storage. Use the `useApiKey` hook to access and include it in API calls:
+
+```jsx
+import { useApiKey } from '../context/ApiKeyContext';
+
+function YourComponent() {
+  const { apiKey } = useApiKey();
+
+  const makeApiCall = async () => {
+    const res = await fetch(`${API}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        doodle_data: base64,
+        gemini_api_key: apiKey  // Include the API key
+      }),
+    });
+    // ... handle response
+  };
+}
+```
+
+The `useApiKey` hook provides:
+- `apiKey` - The current API key (or empty string if not set)
+- `updateApiKey(newKey)` - Update the stored API key
+- `clearApiKey()` - Remove the stored API key
+
+Your API key is stored locally in your browser and never sent to our backend except as part of API requests to generate PokAImon.
+
+---
+
 # Workshop Steps
 
 ## Step 1: Set Up Routing
@@ -246,7 +289,7 @@ Replace the placeholder divs with:
 {
   lastResult && !isGenerating && (
     <img
-      src={lastResult.image_url}
+      src={`${API}${lastResult.image_url}`}
       alt={lastResult.name}
       className="object-contain w-full h-full"
     />
@@ -363,7 +406,7 @@ const like = async (id) => {
   data.map((p) => (
     <div key={p.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-4">
       <img
-        src={p.image_url}
+        src={`${API}${p.image_url}`}
         alt={p.name}
         className="w-full aspect-square object-contain"
       />

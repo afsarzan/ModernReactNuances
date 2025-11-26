@@ -83,6 +83,7 @@ class Cache {
           console.error('[Cache] Delete error:', err);
           return resolve(false);
         }
+        console.log(`[Cache] Deleted key: ${key}`);
         resolve(true);
       });
     });

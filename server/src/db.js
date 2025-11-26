@@ -21,6 +21,8 @@ export class Database {
 
   async initialize() {
     // Auto-create table if it doesn't exist
+    // Note: image_url stores file paths like "/images/pokemon-123.png" (not data URLs)
+    // Note: action_images stores {powerName: "/images/action-123.png"} mapping
     const schema = `
       CREATE TABLE IF NOT EXISTS generated_pokaimon (
         id SERIAL PRIMARY KEY,
