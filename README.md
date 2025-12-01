@@ -1,6 +1,22 @@
 # React in 90-ish Minutes 🚀
 
-Welcome to **React in 90-ish Minutes** - a 90 minutes crash course on ReactJS, including explanatory slides, a YouTube video tutorial, and a hands-on tutorial where you'll learn React by building a real, full-stack application!
+Welcome to **React in 90-ish Minutes** - a 90 minutes crash course on ReactJS, including [explanatory slides](https://ahsanayaz.github.io/react-in-90ish/slides.html?md=react-19-slides.md&title=React%20in%2090%E2%80%91ish%20Minutes#/), a YouTube video tutorial, and a hands-on tutorial where you'll learn React by building a real, full-stack application!
+
+## Video Tutorial
+
+Watch the full workshop on YouTube:
+
+[![React 19 Workshop](https://img.youtube.com/vi/tqjJrXd27m4/0.jpg)](https://www.youtube.com/watch?v=tqjJrXd27m4)
+
+## StackBlitz examples (shown in the video tutorial)
+
+Try the stackblitz examples directly in your browser:
+
+[Open in StackBlitz ⚡️](https://stackblitz.com/@AhsanAyaz/collections/react-in-90-ish)
+
+You can also find the code for these examples in the `stackblitz-examples` directory in this repository.
+
+---
 
 ## 📚 What You'll Learn
 
