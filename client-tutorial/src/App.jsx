@@ -1,5 +1,4 @@
-// ⏸️ WORKSHOP STEP 1: Set Up Routing
-// TODO: Import Routes and Route from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
 
 // ⏸️ WORKSHOP STEP 7: Add Suspense and Lazy Loading
 // TODO: Import lazy and Suspense from 'react'
@@ -26,7 +25,10 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 transition-colors">
         <Header />
         <main className="flex-1 container mx-auto p-4 lg:p-8">
-          {/* ⏸️ WORKSHOP STEP 1: Set up Routes */}
+         <Routes>
+          <Route path="/" element={<GeneratorPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+        </Routes>
           {/* TODO: Wrap content in Suspense (Step 7) */}
           {/* TODO: Add Routes with Route elements for "/" and "/gallery" */}
 
