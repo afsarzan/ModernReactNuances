@@ -1,20 +1,30 @@
-// ⏸️ WORKSHOP STEP 4: Create Custom Hook
-// TODO: Import useEffect, useState, useCallback
+import { useEffect, useState, useCallback } from "react";
 
 const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 export function usePokemonGallery() {
-  /* TODO: Implement custom hook
-    1. Create state for: data, loading, error
-    2. Create fetchGallery function with useCallback
-    3. Use useEffect to fetch on mount
-    4. Return { data, loading, error, refetch }
-  */
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return {
-    data: [],
-    loading: true,
-    error: null,
-    refetch: () => console.log("TODO: Implement refetch"),
-  };
+  const fetchGallery = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await fetch(`${API}/api/gallery`);
+      if (!res.ok) throw new Error("Failed to load gallery");
+      const json = await res.json();
+      setData(json);
+    } catch (e) {
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGallery();
+  }, [fetchGallery]);
+
+  return { data, loading, error, refetch: fetchGallery };
 }

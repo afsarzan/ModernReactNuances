@@ -1,17 +1,13 @@
 import { useState, useEffect } from "react";
 // TODO: Import useMemo from 'react' for Step 6
 import Spinner from "../components/Spinner.jsx";
-
+import { usePokemonGallery } from "../hooks/usePokemonGallery.js";
 const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 export default function GalleryPage() {
-  // ⏸️ WORKSHOP STEP 4: Use Custom Hook
-  // TODO: Replace manual fetch with usePokemonGallery hook
-  // const { data, loading, error, refetch } = usePokemonGallery();
+  const { data, loading, error, refetch } = usePokemonGallery();
 
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchGallery = async () => {
       try {
@@ -42,10 +38,7 @@ export default function GalleryPage() {
         method: "PATCH",
       });
       if (!res.ok) throw new Error("Failed to like");
-      // Refetch data
-      const galleryRes = await fetch(`${API}/api/gallery`);
-      const json = await galleryRes.json();
-      setData(json);
+      await refetch();
     } catch (e) {
       console.error(e);
     }
