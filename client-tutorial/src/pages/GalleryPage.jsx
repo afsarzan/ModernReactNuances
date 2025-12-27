@@ -69,20 +69,20 @@ const availableTypes = useMemo(() => {
         </h2>
 
         <div className="flex flex-col sm:flex-row gap-3">
-  <div className="flex items-center gap-2">
-    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-      Sort:
-    </label>
-    <select
-      value={sortBy}
-      onChange={(e) => setSortBy(e.target.value)}
-      className="px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm"
-    >
-      <option value="newest">Newest</option>
-      <option value="likes">Most Liked</option>
-      <option value="name">Name</option>
-    </select>
-  </div>
+    <div className="flex items-center gap-2">
+      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        Sort:
+      </label>
+      <select
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
+        className="px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm"
+      >
+        <option value="newest">Newest</option>
+        <option value="likes">Most Liked</option>
+        <option value="name">Name</option>
+      </select>
+    </div>
 
     {availableTypes.length > 0 && (
       <div className="flex items-center gap-2">
